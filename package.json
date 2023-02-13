@@ -1,0 +1,15 @@
+{
+  "name": "octagon_nft_generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Javkhlan Rentsendorj /Octagon LLC/",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.11.0"
+  }
+}
