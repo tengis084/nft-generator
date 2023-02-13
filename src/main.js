@@ -158,7 +158,6 @@ const addMetadataIfUnique = (hash, i) => {
 
 const createFiles = async (edition) => {
   const layers = createLayers(layersOrder);
-
   for (let i = 1; i <= edition; i++) {
     await drawLayers(layers, i);
     let isUnique = addMetadataIfUnique(hash, i);
@@ -171,16 +170,20 @@ const createFiles = async (edition) => {
     }
   }
 };
+//zassan
 
-
-const createMetaData = () => {
-  fs.stat(`${buildDir}/${metDataFile}`, (err) => {
-    if(err == null || err.code === 'ENOENT') {
-      fs.writeFileSync(`${buildDir}/${metDataFile}`, JSON.stringify(metadata, null, 2));
+const shineMetedata = async () => {
+  try {
+    const stat = await fs.promises.stat(`${buildDir}/${metDataFile}`);
+    await fs.promises.writeFile(`${buildDir}/${metDataFile}`, JSON.stringify(metadata, null, 2));
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      await fs.promises.writeFile(`${buildDir}/${metDataFile}`, JSON.stringify(metadata, null, 2));
     } else {
-        console.log('Oh no, error: ', err.code);
+      console.log('error: ', error.code);
     }
-  });
+  }
 };
 
-module.exports = { buildSetup, createFiles, createMetaData };
+
+module.exports = { buildSetup, createFiles, shineMetedata };
