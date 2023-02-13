@@ -73,16 +73,24 @@ const layersSetup = layersOrder => {
   return layers;
 };
 
-const buildSetup = () => {
-  if (fs.existsSync(buildDir)) {
-    fs.rmdirSync(buildDir, { recursive: true });
+const buildSetup = async () => {
+  try {
+    const stat = await fs.promises.stat(buildDir);
+    await fs.promises.rmdir(buildDir, { recursive: true });
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      // do nothing
+    } else {
+      console.log('Oh no, error: ', error.code);
+    }
   }
-  fs.mkdirSync(buildDir);
+  await fs.promises.mkdir(buildDir);
 };
 
-const saveLayer = (_canvas, _edition) => {
-  //fs.writeFileSync(`${buildDir}/${_edition}.png`, _canvas.toBuffer("image/png"));
+const saveLayer = async (_canvas, _edition) => {
+  await fs.promises.writeFile(`${buildDir}/${_edition}.png`, _canvas.toBuffer("image/png"));
 };
+
 
 const addMetadata = _edition => {
   let dateTime = Date.now();
@@ -163,10 +171,10 @@ const createFiles = async (edition) => {
     let isUnique = addMetadataIfUnique(hash, i);
     if (!isUnique) {
       console.log(
-        `Duplicate creation for edition ${i}. Same as edition ${Exists.get(hash)}`
+        `Давхардасан зураг  ${i}. устгалаа ${Exists.get(hash)}`
       );
     } else {
-      console.log("Creating edition " + i);
+      console.log("Амжилттай үүсгэгдлээ " + i);
     }
   }
 };
@@ -180,7 +188,7 @@ const shineMetedata = async () => {
     if (error.code === 'ENOENT') {
       await fs.promises.writeFile(`${buildDir}/${metDataFile}`, JSON.stringify(metadata, null, 2));
     } else {
-      console.log('error: ', error.code);
+      console.log('Алдаа: ', error.code);
     }
   }
 };
